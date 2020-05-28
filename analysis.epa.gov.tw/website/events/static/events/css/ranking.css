@@ -1,0 +1,40 @@
+
+#filterDate {
+	width: 320px;
+}
+
+#searchResult .progress{
+	margin: 3px 0;
+	line-height: 24px;
+}
+
+#searchResult h3 {
+	font-weight: 400;
+	margin-top: 7px;
+	margin-bottom: 6px;
+}
+
+.result-cell{
+	margin-bottom: 0px;
+}
+
+.result-cell .ibox-title{
+	border:0;
+}
+
+.progress-bar-gray{
+	background-color: #d1dade;
+}
+
+.progress-bar-gray span{
+	color: #5e5e5e;
+	white-space: nowrap;
+}
+
+#loading-layer{
+	display: none;
+}
+
+#loading-layer .loader{
+	top: 50%;
+}

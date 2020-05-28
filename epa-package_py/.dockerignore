@@ -1,0 +1,9 @@
+.dockerignore
+Dockerfile*
+docker-compose*
+
+epa.egg-info/
+__pycache__/
+*.pyc
+
+local_settings.py

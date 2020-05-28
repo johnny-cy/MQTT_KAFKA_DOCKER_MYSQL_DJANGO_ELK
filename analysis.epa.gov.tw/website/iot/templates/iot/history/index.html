@@ -1,0 +1,101 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}IoT數據回朔{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/plugins/leaflet/leaflet.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/plugins/mapbox/mapbox.standalone.css' %}" rel="stylesheet" />
+<link href="{% static 'css/plugins/jquery-ui/jquery-ui-timepicker-addon.min.css' %}" rel="stylesheet" />
+<!-- Custom Styles -->
+<link href="{% static 'iot/css/history-index.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/plugins/leaflet/leaflet.min.js' %}"></script>
+<script src="{% static 'js/plugins/mapbox/mapbox.standalone.js' %}"></script>
+<script src="{% static 'js/plugins/jquery-ui/jquery-ui-timepicker-addon.min.js' %}"></script>
+<!-- Custom JS -->
+<script src="{% url 'configs_area_map_js' %}"></script>
+<script src="{% static 'iot/js/history-index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<h2>IoT 數據回朔</h2>
+<div class="pan-buttons-wrap">
+	<table>
+        <tbody>
+            <tr>
+                <th>
+                    <h3>Step1 請選擇地點：</h3>
+                </th>
+                <td>
+                    <div id="panButtons" class="form-group"></div>
+                    <button id="chooseMapButton" class="btn btn-default" data-toggle="modal" data-target="#chooseMapModal">從地圖選擇</button> <span id="chooseMapText"></span>
+                </td>
+            </tr>
+            <tr class="spacing"></tr>
+            <tr>
+            	<th>
+            		<h3>Step2 請選擇時間：</h3>
+            	</th>
+            	<td>
+            		<button id="chooseRangeButton" class="btn btn-success">觀看特定時段</button>
+            		<div class="daterange-control">
+						<h4>開始時間</h4>
+						<input type="text" class="input-sm form-control" value="" id="fromDatePicker">
+						<h4>結束時間</h4>
+						<input type="text" class="input-sm form-control" value="" id="toDatePicker">
+					</div>
+					<span style="color: #ed5565;">一次最多只播放 12hr</span>
+            	</td>
+            </tr>
+            <tr class="spacing"></tr>
+            <tr class="spacing"></tr>
+            <tr>
+            	<td colspan="2">
+            		<button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-bmdSrc="" data-target="#popupModal" id="playButton">產生數據地圖</button>
+            		<span id="errorMsg" class="error text-danger"></span>
+            	</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="chooseMapModal">
+	<div class="modal-dialog">
+		<div class="modal-content bmd-modalContent">
+			<div class="modal-body">
+				<div class="close-button">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<!-- Map -->
+				<div id='map'>
+					<div class="buttons-on-map">
+						<div class="buttons-on-map-offset">
+							<button id="confirmLocation" class="btn btn-lg btn-primary" style="float: left;" data-dismiss="modal">確認</button>
+							<button class="btn btn-lg btn-default" style="float: right;" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="popupModal">
+	<div class="modal-dialog">
+		<div class="modal-content bmd-modalContent">
+			<div class="modal-body">
+				<div class="close-button">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<iframe class="embed-responsive-item" frameborder="0" scrolling="no"></iframe>
+			</div>
+
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}

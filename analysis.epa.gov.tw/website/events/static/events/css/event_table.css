@@ -1,0 +1,43 @@
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-yw4l{vertical-align:top}
+
+
+.float-e-margins .btn { margin-bottom: 0px; }
+
+#filterDate .input-group {
+display: inline-table;
+vertical-align: middle;
+}
+#filterDate .input-group-addon{
+  width: auto !important;
+}
+#filterDate .form-control {
+  width: 120px !important;
+}
+
+.tooltip-inner {
+max-width: 360px;
+white-space: pre-line;
+text-align: left;
+line-height: 20px;
+}
+
+#filterDaterange button,
+#filterArea button{
+margin-right: 5px;
+}
+
+.form-check{
+	margin-right: 10px;
+	font-size: 14px;
+}
+.form-check-input{
+	margin-right: 5px !important;
+	font-size: 16px;
+}
+.form-check-inline{
+	display: inline-block;
+}
+

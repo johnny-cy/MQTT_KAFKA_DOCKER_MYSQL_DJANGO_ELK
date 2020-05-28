@@ -1,0 +1,186 @@
+
+body { margin:0; padding:0; }
+.hidden { display: none; }
+
+
+#show-layer > h2{
+	margin-top: 0px;
+}
+
+/* ==========  header  ========== */
+
+#color-range{
+	margin-top: 5px;
+}
+
+.overview-tip-wrap{
+	display: flex;
+	padding: 5px 0;
+	margin-bottom: 6px;
+}
+.overview-tip-wrap p{
+	margin: 0;
+}
+.overview-tip-wrap p.switcher-wrap{
+	margin-bottom: 5px;
+}
+
+.overview-tip-wrap .max-score, .overview-tip-wrap .min-score{
+	white-space: nowrap;
+	position: absolute;
+	left: 50px;
+}
+
+.switcher-wrap{
+	display: inline-block;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.overview-tip-wrap .min-score{
+	top: 55px;
+}
+
+.overview-tip-title{
+	font-weight: 800;
+}
+.overview-red{
+	color: #c23737;
+}
+.overview-yellow{
+	color: #f4a363;
+}
+.overview-green{
+	color: #55aa88;
+}
+
+.tools-control{
+	border-top: 1px #C5C5C5 solid;
+	background-color: rgba(0,0,0,0.1);
+	margin:0;
+}
+
+.tools-control .daterange-text-wrap{
+	display: inline-block;
+    padding-top: 10px;
+    padding-right: 5px;
+    font-size: 1.15em;
+}
+
+.tools-control .hasDatepicker{
+	display: inline-block;
+    width: 140px;
+}
+
+#filterDaterange{
+	display: inline-block;
+}
+
+#filterDaterange button{
+	margin-right: 2px;
+}
+
+.station-dot{
+	background-color: #4988cc;
+    height: 12px;
+    display: inline-block;
+    width: 12px;
+    border: 1.5px #ccf solid;
+    border-radius: 6px;
+}
+
+/* ==========  map  ========== */
+
+#map {
+  width:100%;
+  /*height: 80%;*/
+  height: 520px;
+  /*position: absolute;
+  top: 0px;*/
+}
+
+
+/* ==========  time-control  ========== */
+
+#controller-container {
+    /*position: absolute;*/
+    width: 100%;
+    display: flex;
+  	/*top: 93%;*/
+  	/*bottom: 0;*/
+  	/*z-index: 10000;*/
+  	padding: 10px 0px 8px;
+}
+
+#controller-container .slider-wrap{
+	display: inline-block;
+	width: calc(100% - 232px);
+}
+
+#controller-container span.from-date{
+	margin-right: 10px;
+}
+
+#controller-container span.to-date{
+	margin-left: 10px;
+}
+
+/* ==========  slider  ========== */
+
+#slider {
+	/*margin:16px 10px 10px 10px;*/
+	width: 100%;
+}
+
+.noUi-tooltip{
+	font-size: 1em;
+	/*color: #4988cc;*/
+	/*margin-left: 55px;*/
+	width: 110px;
+	bottom: 100% !important;
+	padding: 0;
+}
+
+.inner-tooltip-wrap{
+	padding: 5px 6px 2px 6px;
+}
+.leaflet-tooltip-pane h2{
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #c23737;
+	margin: 0;
+}
+.leaflet-tooltip-pane h5{
+	font-size: 1em;
+	margin: 0;
+}
+
+.leaflet-tooltip-pane span{
+	font-weight: bold;
+}
+.leaflet-tooltip-pane p{
+	margin: 0;
+}
+
+a.leaflet-popup-close-button{
+	text-indent: 0;
+}
+
+.leaflet-popup-tip-container{
+	left:0;
+}
+
+.leaflet-popup{
+	margin-bottom: 5px;
+}
+
+.ui-datepicker{
+	z-index: 10000 !important;
+}
+
+p.event-number-tip{
+	position: absolute;
+    z-index: 1000;
+    top: 16px;
+    left: 54px;
+}

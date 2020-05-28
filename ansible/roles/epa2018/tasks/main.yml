@@ -1,0 +1,43 @@
+---
+- name: Ensure .ssh directory exists
+  file:
+    path: /root/.ssh
+    state: directory
+    mode: 0700
+  when: false # TODO: when source_code is defined
+
+- name: Copy private key
+  copy:
+    src: id_rsa
+    dest: /root/.ssh/
+    mode: 0600
+  when: false # TODO: when source_code is defined
+
+- name: Checkout epa2018 staging source code
+  git:
+    repo: git@github.com:bohachu/epa2018.git
+    dest: /epa2018
+    accept_hostkey: yes
+    key_file: /root/.ssh/id_rsa
+  when: false # TODO: when source_code is defined
+
+#- name: Remove private key
+#  file:
+#    state: absent
+#    path: /root/.ssh/
+
+- name: Install yq
+  get_url:
+    url: https://github.com/mikefarah/yq/releases/download/2.1.1/yq_linux_amd64
+    dest: /usr/local/bin/yq
+    mode: 0755
+
+- name: Build docker images
+  shell: cd /epa2018 && ./docker-util.sh build
+  environment:
+    PATH: $PATH:/usr/bin:/usr/local/bin
+
+- name: Start docker services
+  shell: cd /epa2018 && ./docker-util.sh start {{ epa2018_deploy }}
+  environment:
+    PATH: $PATH:/usr/bin:/usr/local/bin

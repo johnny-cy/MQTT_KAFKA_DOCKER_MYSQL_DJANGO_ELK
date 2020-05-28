@@ -1,0 +1,118 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}國家級測站數據檢核{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/plugins/dataTables/datatables.min.css' %}" />
+<link href="{% static 'station_anomaly/css/info.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
+<script src="{% static 'js/api-urls.js' %}"></script>
+<script src="{% url 'configs_area_map_js' %}"></script>
+<script src="{% static 'station_anomaly/js/info-debug-data.js' %}"></script>
+<script src="{% static 'station_anomaly/js/info.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h1 align="center"> 國家級測站數據檢核 （ ＰＭ2.5 , PM 10 ）</h1>
+<div class="ibox-content">
+	<div class="row" style="margin-bottom: 8px;">
+		<div class="form-group" id="data_1">
+			<h3></h3>
+			<div class="col-sm-3">
+				<label>From Date: </label>
+				<div class="input-group date" data-provide="datepicker" style="width: 90%;">
+					<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+					<input type="text" class="input-sm form-control" name="start" value="" id="fromDate">
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<label>To Date: </label>
+				<div class="input-group date" data-provide="datepicker" style="width: 90%;">
+					<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+					<input type="text" class="input-sm form-control" name="end" value="" id="toDate">
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="checkbox">
+					<label for="showAll">
+						<input type="checkbox" id="showAll">
+						<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+						顯示全部
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table id="station-data" class="table table-striped table-bordered table-hover dataTables-example" >
+			<thead>
+				<tr>
+					<th>日期</th>
+					<th>測站</th>
+					<th>測項</th>
+					<th>00</th>
+					<th>01</th>
+					<th>02</th>
+					<th>03</th>
+					<th>04</th>
+					<th>05</th>
+					<th>06</th>
+					<th>07</th>
+					<th>08</th>
+					<th>09</th>
+					<th>10</th>
+					<th>11</th>
+					<th>12</th>
+					<th>13</th>
+					<th>14</th>
+					<th>15</th>
+					<th>16</th>
+					<th>17</th>
+					<th>18</th>
+					<th>19</th>
+					<th>20</th>
+					<th>21</th>
+					<th>22</th>
+					<th>23</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>日期</th>
+					<th>測站</th>
+					<th>測項</th>
+					<th>00</th>
+					<th>01</th>
+					<th>02</th>
+					<th>03</th>
+					<th>04</th>
+					<th>05</th>
+					<th>06</th>
+					<th>07</th>
+					<th>08</th>
+					<th>09</th>
+					<th>10</th>
+					<th>11</th>
+					<th>12</th>
+					<th>13</th>
+					<th>14</th>
+					<th>15</th>
+					<th>16</th>
+					<th>17</th>
+					<th>18</th>
+					<th>19</th>
+					<th>20</th>
+					<th>21</th>
+					<th>22</th>
+					<th>23</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+{% endblock %}

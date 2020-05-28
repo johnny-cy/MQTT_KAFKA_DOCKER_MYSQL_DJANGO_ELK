@@ -1,0 +1,8 @@
+---
+- name: EPA2018 Project Hosting
+  hosts: epa2018
+  remote_user: root
+  roles:
+    - common
+    - swarm-manager
+    - epa2018

@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}API 手冊{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/embed-widget.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block content %}
+<h2>API 手冊</h2>
+<div class="embed-wrap">
+	<iframe src="https://docs.google.com/document/d/e/2PACX-1vSwV-PCYz8-XQGzoojreQj2kVHx5aBrLKGmO6_2VOsfLVYv0ZwdBJ3LsLw8asavj-qnmK9lgkd2jOID/pub?embedded=true"></iframe>
+</div>
+{% endblock %}

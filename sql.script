@@ -1,0 +1,2 @@
+insert into `feature_configs_area`(name,show_text,min_lat,max_lat,min_lon,max_lon,circle_active,event_active) values("芳苑工業區","彰化-芳苑工業區",23.9000,23.9324,120.3383,120.3629,0,1);
+

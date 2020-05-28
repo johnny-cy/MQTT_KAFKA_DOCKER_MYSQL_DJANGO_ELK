@@ -1,0 +1,23 @@
+---
+version: "3.7"
+
+services:
+  zookeeper:
+    ports:
+      - target: 2181
+        published: 2181
+        protocol: tcp
+        mode: host
+  kafka:
+    image: cameo/kafka:latest
+    ports:
+      - target: 9092
+        published: 9092
+        protocol: tcp
+        mode: host
+    environment:
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_LOG_DIRS: /kafka/kafka-logs

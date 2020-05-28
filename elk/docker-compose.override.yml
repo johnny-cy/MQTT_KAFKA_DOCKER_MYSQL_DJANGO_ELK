@@ -1,0 +1,32 @@
+---
+version: "3.7"
+
+services:
+  elasticsearch:
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host
+  logstash:
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+        mode: host
+  kibana:
+    ports:
+      - target: 5601
+        published: 5601
+        protocol: tcp
+        mode: host
+  logspout:
+    environment:
+      ROUTE_URIS: logstash+tcp://logstash:5000
+      LOGSTASH_TAGS: logspout,cameo-dev
+    networks:
+      - epa-elk

@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS `epa` ;
+
+CREATE USER 'epa'@'%' IDENTIFIED BY 'epa' ;
+GRANT ALL ON `epa`.* TO 'epa'@'10.0.0.0/255.0.0.0' IDENTIFIED BY 'epa' ;
+GRANT ALL ON `epa`.* TO 'epa'@'172.16.0.0/255.240.0.0' IDENTIFIED BY 'epa' ;
+GRANT ALL ON `epa`.* TO 'epa'@'192.168.0.0/255.255.0.0' IDENTIFIED BY 'epa' ;
+

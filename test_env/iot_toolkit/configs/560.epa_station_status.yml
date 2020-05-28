@@ -1,0 +1,16 @@
+---
+
+code: "560"
+project: "國家級測站儀器狀態值"
+api_key: "PKWM2FHP17ZA1XP4R0"
+fetch_devices: []   # empty array, fetcher will get all devices' rawdata
+fetch_sensors: []   # empty array, fetcher will get all sensor types
+time_span_hours: 9900
+
+handlers:
+  kafka:
+    handler_id: kafka
+    args:
+      topic: rawdata.560.epa_station_status
+      bootstrap.servers: "kafka:9092"
+      queue.buffering.max.ms: 3000

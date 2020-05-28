@@ -1,0 +1,8 @@
+.dockerignore
+Dockerfile
+
+__pycache__/
+*.pyc
+
+db.sqlite3
+local_settings.py

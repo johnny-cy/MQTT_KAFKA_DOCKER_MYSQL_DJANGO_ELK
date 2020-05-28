@@ -1,0 +1,94 @@
+{% extends 'fullscreen.html' %}
+
+{% load static %}
+
+{% block title %}數據回朔動畫{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/plugins/leaflet/leaflet.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/plugins/nouislider/nouislider.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/plugins/switchery/switchery.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- Custom Styles -->
+<link href="{% static 'css/loading-widget.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'iot/css/history-index.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'iot/css/history-animation.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/api-urls.js' %}"></script>
+<script src="{% static 'js/plugins/leaflet/leaflet.min.js' %}"></script>
+<script src="{% static 'js/plugins/mapbox/mapbox.standalone.js' %}"></script>
+<script src="{% static 'js/plugins/leaflet/leaflet-windbarb.js' %}"> </script>
+<script src="{% static 'js/plugins/leaflet/leaflet-idw.js' %}"> </script>
+<script src="{% static 'js/plugins/nouislider/nouislider.min.js' %}"> </script>
+<script src="{% static 'js/plugins/switchery/switchery.min.js' %}"></script>
+<!-- Flot -->
+<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.tooltip.min.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.resize.js' %}"></script>
+<script src="{% static 'js/plugins/flot/jquery.flot.time.js' %}"></script>
+<!-- Custom JS -->
+<script src="{% static 'iot/js/history-animation.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- loading layer -->
+<div id='loading-layer'>
+    <div class="loader"></div>
+    <div class="loader-tip">Loading, 資料龐大請稍候</div>
+    <!-- pre load -->
+    <img id="windIconPreload" src="{% static 'iot/images/wind_icon.png' %}" style="display: none;">
+</div>
+
+<!-- body layer -->
+<div id='show-layer'>
+
+    <!-- Map -->
+    <div id='map'>
+        
+        <div class="color-mobile-wrap">
+            <i class="fa fa-info-circle"></i>
+        </div>
+
+        <div id="color-samples">
+            <div class="color-list">
+            </div>
+        </div>
+
+        <div class="wind-mobile-wrap">
+            <i class="fa fa-wrench"></i>
+        </div>
+        <div class="wind-wrap">
+            <div id="wind-direction">
+                <p id="windDataInfoWrap"><span>風向資料：</span></p>
+                <p>風向角度：<span id="windDirNumber"></span> <span id="windDirShort"></span><span id="windDirArrow">↑</span></p>
+                <p style="margin: 20px 0px;">風標：</p>
+                <div id="windBarb"></div>
+                <p>風速：<span id="windSpeed"></span></p>
+            </div>  
+            <p>顯示絕對數值：<input id="valueShowSwitch" type="checkbox" /></p>
+            <div id="diffusionButtons" class="form-group"><span>顯示擴散效果：</span></div>
+        </div>
+    </div>
+        <!-- play bar -->
+
+    <div id='controller-container'>
+        <div class="control-wrap">
+            <img class="control-button" id="stepBackward" src="{% static 'iot/images/backward.png' %}">
+            <img class="control-button" id="play" src="{% static 'iot/images/play.png' %}">
+            <img class="control-button" id="pause" src="{% static 'iot/images/pause.png' %}" style="display:none;">
+            <img class="control-button" id="stepForward" src="{% static 'iot/images/forward.png' %}">
+        </div>
+        <div class="slider-wrap">
+            <button id='slider'></button>
+        </div>
+    </div>
+
+    <div id="chart-compares">
+        
+    </div>
+</div>
+
+{% endblock %}

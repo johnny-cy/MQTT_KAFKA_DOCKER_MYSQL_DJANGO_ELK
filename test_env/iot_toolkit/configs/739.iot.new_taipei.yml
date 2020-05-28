@@ -1,0 +1,278 @@
+---
+
+code: "739"
+project: "柏昇空品感測器-新北市"
+api_key: "PKT3UFFX9XTY3Y3SA0"
+
+
+# MQTT
+
+MQTTReceiver:
+  args: {}
+  input: mqtt_data
+  output: kafka_mqtt_data
+
+
+MQTTETLer:
+  args: &etl_pipelines
+    etl:
+      - take_first:
+          field: value
+      - to_numeric:
+          fields:
+            - value
+      - replace_value:
+          field: value
+          old_values:
+            - NA
+            - ""
+          new_value: null
+      - rename:
+          fields:
+            deviceId: device_id
+      - rename_from_field_value:
+          field: value
+          from_field: id
+      - append_device_name_lat_lon:
+          device_cls_name: IoTDevice
+      - select:
+          fields:
+            - time
+            - device_id
+            - name
+            - lat
+            - lon
+            - ampere
+            - co
+            - devstat
+            - humidity
+            - humidity_main
+            - no2
+            - noise
+            - o3
+            - pm1
+            - pm2_5
+            - pm10
+            - temperature
+            - temperature_main
+            - voc
+            - volt
+  input: kafka_mqtt_data
+  output: kafka_etl_data
+
+
+# RESTful
+
+RawdataUpdater:
+  args:
+    time_span_days: 6
+    device_class: IoTDevice
+    data_class: IoTRawData
+    data_count_class: IoTRawDataCount
+  input: http_rawdata
+  output: kafka_rest_data
+
+
+RESTETLer:
+  args:
+    << : *etl_pipelines
+  input: kafka_rest_data
+  output: kafka_etl_data
+
+
+DeviceInformer:
+  args:
+    etl:
+      - update_from_dict_list:
+          field: attributes
+          drop: true
+      - rename:
+          fields:
+            id: device_id
+            deviceType: device_type
+            ownerId: owner_id
+            manufacturerId: manufacturer_id
+      - to_bool:
+          fields:
+            - mobile
+      - select:
+          fields:
+            - device_id
+            - name
+            - desc
+            - type
+            - lat
+            - lon
+            - alt
+            - reference
+            - display
+            - device_type
+            - owner_id
+            - mobile
+            - outdoor
+            - manufacturer_id
+            - mac_id
+            - devstat
+            - sb_id
+            - mb_id
+            - errorcode
+            - area
+            - areatype
+            - sensors
+  input: http_device
+  output: db_device
+
+
+CountUpdater:
+  input: http_count
+  output: db_count
+
+
+# Save to DB
+
+DBShelver:
+  args:
+    postpone_write: True
+  input: kafka_etl_data
+  output: db_data
+
+
+ESShelver:
+  args:
+    postpone_write: True
+    postpone_gather_keys:
+      - time
+      - device_id
+    etl:
+      - datetime_to_isoformat:
+          field: time
+          parsing_format: "%Y-%m-%d %H:%M:%S.%f"
+          zoneinfo: Asia/Taipei
+  input: kafka_etl_data
+  output: es_data
+
+
+DataObject:
+  input: kafka_etl_data
+  output: kafka_data_object
+
+
+EventTransmitter:
+  args:
+    areas:
+      - 土城三峽
+      - 五股工業區
+      - 林口工業區
+      - 樹林工業區
+    etl:
+      - to_numeric:
+          numeric_type: int
+          fields:
+            - score
+            - duration
+            - max_value
+            - first_value
+      - to_str:
+          fields:
+            - level
+      - rename:
+          fields:
+            device_list: deviceList
+            event_id: eventId
+            device_count: deviceCount
+            event_count: eventCount
+            start_time: startTime
+            end_time: endTime
+            max_value: maxValue
+            first_device: firstDeviceId
+            first_value: fisrtValue
+      - select:
+          fields:
+            - pid
+            - level
+            - item
+            - eventId
+            - area
+            - score
+            - deviceCount
+            - deviceList
+            - duration
+            - eventCount
+            - endTime
+            - startTime
+            - maxValue
+            - firstDeviceId
+            - fisrtValue
+            - url
+  input: kafka_event_data_object
+  output: mqtt_event_out
+
+handlers:
+  # SOURCEs
+  mqtt_data:
+    handler: MQTTHandler
+    args:
+      topics:
+        - /v1/project/739/device/+/sensor/+/rawdata
+  http_rawdata:
+    handler: HTTPHandler
+  http_count:
+    handler: HTTPHandler
+  http_device:
+    handler: DeviceHTTPHandler
+
+  kafka_event_data_object:
+    handler: DataObjectKafkaHandler
+    args:
+      model: IoTEvent
+
+  # KAFKA QUEUEs
+  kafka_mqtt_data:
+    handler: KafkaHandler
+    args:
+      topics:
+        - rawdata.iot.739.new_taipei.mqtt
+  kafka_rest_data:
+    handler: KafkaHandler
+    args:
+      topics:
+        - rawdata.iot.739.new_taipei.rest
+      config: {}
+  kafka_etl_data:
+    handler: KafkaHandler
+    args:
+      topics:
+        - rawdata.iot.739.new_taipei.etl
+  kafka_data_object:
+    handler: DataObjectKafkaHandler
+    args:
+      model: IoTRawData
+
+  # STORAGEs
+  es_data:
+    handler: ESHandler
+    args:
+      index: rawdata.iot.739.new_taipei
+      id_fields:
+        - time
+        - device_id
+  db_data:
+    handler: SqlAlchemyHandler
+    args:
+      model: IoTRawData
+  db_count:
+    handler: SqlAlchemyHandler
+    args:
+      model: IoTRawDataCount
+  db_device:
+    handler: SqlAlchemyHandler
+    args:
+      model: IoTDevice
+
+  mqtt_event_out:
+    handler: MQTTHandler
+    args:
+      host: iot.epa.gov.tw
+      topics:
+        - /v1/publish/event
+

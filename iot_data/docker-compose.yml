@@ -1,0 +1,246 @@
+---
+version: "3.7"
+
+x-setting:
+  x-iot_toolkit_default: &iot_toolkit_default
+    image: cameo/iot_toolkit:latest
+    build:
+      context: ./iot_toolkit
+    networks:
+      - epa-kafka
+      - epa-data_warehouse
+
+
+services:
+  event_table_debug:
+    image: cameo/event_table:latest
+    build:
+      context: ./event_table
+    networks:
+      - epa-kafka
+      - epa-data_warehouse
+    command: tail -f /dev/null
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+
+
+
+          #  event_table_streaming:
+          #    image: cameo/event_table:latest
+          #    build:
+          #      context: ./event_table
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    deploy:
+          #      resources:
+          #        limits:
+          #          memory: 8192M
+
+          #  event_table_historical:
+          #    image: cameo/event_table:latest
+          #    build:
+          #      context: ./event_table
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    command:
+          #      - python3
+          #      - event_table.py
+          #    deploy:
+          #      resources:
+          #        limits:
+          #          memory: 8192M
+
+          #  circle_debug:
+          #    image: cameo/circle:latest
+          #    build:
+          #      context: ./circle
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    command: tail -f /dev/null
+          #    deploy:
+          #      resources:
+          #        limits:
+          #          memory: 8192M
+
+          #  circle_streaming:
+          #    image: cameo/circle:latest
+          #    build:
+          #      context: ./circle
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    deploy:
+          #      resources:
+          #        limits:
+          #          memory: 8192M
+          #  circle_historical:
+          #    image: cameo/circle:latest
+          #    build:
+          #      context: ./circle
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    command:
+          #      - python3
+          #      - circle.py
+          #    deploy:
+          #      resources:
+          #        limits:
+          #          memory: 2060M
+
+          #  email_notification:
+          #    image: cameo/email_notification:latest
+          #    build:
+          #      context: ./email_notification
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    environment:
+          #      production: "1"
+
+          #  data_fusion:
+          #    image: cameo/data_fusion:latest
+          #    build:
+          #      context: ./data_fusion
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    deploy:
+          #      restart_policy:
+          #        condition: any
+          #        delay: 1h
+
+          #epa_station_level2_5:
+          #    image: cameo/epa_station_level2.5:latest
+          #    build:
+          #      context: ./epa_station_level2.5
+          #    networks:
+          #      - epa-kafka
+          #      - epa-data_warehouse
+          #    deploy:
+          #      restart_policy:
+          #        condition: any
+          #        delay: 30m
+
+  #count_updater:
+  #  << : *iot_toolkit_default
+  #  command:
+  #      # - configs/750.iot.pingtung.yml
+
+  data_object:
+    << : *iot_toolkit_default
+    command:
+      - data_object.py
+      - configs/1107.iot.taipei_city.yml
+
+  db_shelver:
+    << : *iot_toolkit_default
+    command:
+      - db_shelver.py
+      - configs/1107.iot.taipei_city.yml
+
+  device_informer:
+    << : *iot_toolkit_default
+    command:
+      - device_informer.py
+      - configs/1107.iot.taipei_city.yml
+
+        # es_shelver:
+        #    image: cameo/iot_toolkit:latest
+        #    build:
+        #      context: ./iot_toolkit
+        #    networks:
+        #      - epa-kafka
+        #      - epa-data_warehouse
+        #     - epa-elk
+        #    command:
+            #      - es_shelver.py
+            #      - configs/1107.iot.taipei_city.yml
+
+  mqtt_etl:
+    << : *iot_toolkit_default
+    command:
+      - mqtt_etl.py
+      - configs/1107.iot.taipei_city.yml
+
+  mqtt_receiver:
+    << : *iot_toolkit_default
+    command:
+      - mqtt_receiver.py
+      - configs/1107.iot.taipei_city.yml
+
+        # event_transmitter:
+        #    << : *iot_toolkit_default
+        #    command:
+        #      - event_transmitter.py
+        #      - configs/1107.iot.taipei_city.yml
+
+
+  #rest_etl:
+  #  << : *iot_toolkit_default
+  #  command:
+  #    - rest_etl.py
+  #    - configs/553.iot.yml
+  #      # - configs/562.lass.yml  #TODO: Timeout issue
+  #    - configs/566.epa_station.textar.yml
+  #      # - configs/738.iot.keelung.yml
+  #      # - configs/739.iot.new_taipei.yml
+  #      # - configs/740.iot.yilan.yml
+  #      # - configs/741.iot.taoyuan.yml
+  #      # - configs/742.iot.hsinchu_county.yml
+  #      # - configs/743.iot.hsinchu_city.yml
+  #      # - configs/744.iot.miaoli.yml
+  #      # - configs/745.iot.yunlin.yml
+  #      # - configs/746.iot.chiayi_county.yml
+  #      # - configs/747.iot.chiayi_city.yml
+  #      # - configs/748.iot.tainan.yml
+  #      # - configs/749.iot.kaohsiung.yml
+  #      # - configs/750.iot.pingtung.yml
+
+  #rest_updater:
+  #  << : *iot_toolkit_default
+  #  command:
+  #    - rest_updater.py
+  #    - configs/1044.iot.changhua.yml
+  #    - configs/553.iot.yml
+  #      # - configs/562.lass.yml  #TODO: Timeout issue
+  #    - configs/566.epa_station.textar.yml
+  #      # - configs/738.iot.keelung.yml
+  #      # - configs/739.iot.new_taipei.yml
+  #      # - configs/740.iot.yilan.yml
+  #      # - configs/741.iot.taoyuan.yml
+  #      # - configs/742.iot.hsinchu_county.yml
+  #      # - configs/743.iot.hsinchu_city.yml
+  #      # - configs/744.iot.miaoli.yml
+  #      # - configs/745.iot.yunlin.yml
+  #      # - configs/746.iot.chiayi_county.yml
+  #      # - configs/747.iot.chiayi_city.yml
+  #      # - configs/748.iot.tainan.yml
+  #      # - configs/749.iot.kaohsiung.yml
+  #      # - configs/750.iot.pingtung.yml
+
+
+networks:
+  epa-kafka:
+    name: epa-kafka
+    external: true
+  epa-data_warehouse:
+    name: epa-data_warehouse
+    external: true
+    #  epa-elk:
+    #    name: epa-elk
+    #    external: true
+
+
+x-cameo:
+  deploy:
+    stack_name: epa-iot_data
+    enable: true
+    priority: 100
+  build:
+    enable: true

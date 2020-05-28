@@ -1,0 +1,4 @@
+connexion>=1.4
+Flask>=1.0
+SQLAlchemy>=1.2
+uwsgi

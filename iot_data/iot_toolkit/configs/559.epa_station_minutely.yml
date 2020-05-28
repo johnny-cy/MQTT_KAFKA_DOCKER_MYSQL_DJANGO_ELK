@@ -1,0 +1,16 @@
+---
+
+code: "559"
+project: "國家級測站分鐘值"
+api_key: "PKP3WZKUFU7KBST40K"
+fetch_devices: []   # empty array, fetcher will get all devices' rawdata
+fetch_sensors: []   # empty array, fetcher will get all sensor types
+time_span_hours: 160
+
+handlers:
+  kafka:
+    handler_id: kafka
+    args:
+      topic: rawdata.559.epa_station_minutely
+      bootstrap.servers: "kafka:9092"
+      queue.buffering.max.ms: 3000

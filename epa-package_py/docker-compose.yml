@@ -1,0 +1,54 @@
+---
+version: "3.7"
+
+services:
+
+  epa-python-base:
+    image: cameo/epa-python-base:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile.base
+
+  epa-python-base-uwsgi:
+    image: cameo/epa-python-base-uwsgi:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile.uwsgi
+
+  epa-python-base-sklearn:
+    image: cameo/epa-python-base-sklearn:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile.sklearn
+
+  epa-package_py:
+    image: cameo/epa-python:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: cameo/epa-python-base
+
+  epa-package_py-uwsgi:
+    image: cameo/epa-python-uwsgi:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: cameo/epa-python-base-uwsgi
+
+  epa-package_py-sklearn:
+    image: cameo/epa-python-sklearn:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: cameo/epa-python-base-sklearn
+
+
+x-cameo:
+  stack_name: ""
+  deploy:
+    enable: false
+  build:
+    enable: true

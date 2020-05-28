@@ -1,0 +1,60 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}污染趨勢排行榜{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/loading-widget.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/plugins/dataTables/datatables.min.css' %}" />
+<link href="{% static 'css/plugins/jquery-ui/jquery-ui-timepicker-addon.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/event-table-widget.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'events/css/ranking.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
+<script src="{% static 'js/api-urls.js' %}"></script>
+<script src="{% static 'js/plugins/jquery-ui/jquery-ui-timepicker-addon.min.js' %}"></script>
+<script src="{% url 'configs_area_map_js' %}"></script>
+<script src="{% static 'js/event-table-widget.js' %}"></script>
+<script src="{% static 'events/js/ranking.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<h2>污染趨勢排行榜</h2>
+<div class="ibox-content m-b-sm border-bottom">
+	<div class="row">
+		<div class="col-lg-5">
+			<label class="control-label">請選擇日期：</label>
+			<div id="filterDate" class="input-daterange input-group">
+				<input type="text" class="input-sm form-control" name="start" value="" id="fromDate">
+				<span class="input-group-addon">to</span>
+				<input type="text" class="input-sm form-control" name="end" value="" id="toDate">
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<label class="control-label">請選擇污染層級：</label>
+			<div class="dropdown">
+				<button class="btn btn-default dropdown-toggle" type="button" id="levelDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" value="高污染">高污染
+					<span class="caret"></span>
+				</button>
+				<ul id="levelItems" class="dropdown-menu" aria-labelledby="levelDropdown">
+					<li><a href="#" data-value="高污染">高污染</a></li>
+					<li><a href="#" data-value="中污染">中污染</a></li>
+					<li><a href="#" data-value="低污染">低污染</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<button class="btn btn-primary btn-lg" id="searchBtn" type="button" style="margin-top: 10px;"><i class="fa fa-search"></i></button>
+		</div>
+	</div>
+</div>
+<!-- loading layer -->
+<div id='loading-layer'>
+    <div class="loader"></div>
+</div>
+<div id="searchResult" class="ibox"></div>
+{% endblock %}

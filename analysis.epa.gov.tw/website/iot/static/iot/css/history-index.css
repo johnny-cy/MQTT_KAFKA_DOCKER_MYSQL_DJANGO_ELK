@@ -1,0 +1,132 @@
+
+body { margin:0; padding:0; }
+.hidden { display: none; }
+
+h2{
+	margin-top: 0px;
+}
+
+tr.spacing{
+	height: 20px;
+}
+
+.pan-buttons-wrap{
+	display: flex;
+	padding: 5px 0;
+	margin-bottom: 6px;
+}
+.pan-buttons-wrap p{
+	margin: 0;
+}
+
+#panButtons{
+	margin-bottom: 10px;
+}
+
+#panButtons button{
+	margin-right: 5px;
+}
+
+/* ==========  map  ========== */
+
+#map {
+  width:100%;
+  /*height: 80%;*/
+  height: calc(100vh - 104px);
+  /*position: absolute;
+  top: 0px;*/
+}
+
+#map .buttons-on-map {
+	width: 180px;
+	position: absolute;
+	left: 50%;
+	bottom: 0px;
+	z-index: 10000;
+	margin: 20px 10px;
+}
+
+.buttons-on-map-offset{
+	position: relative;
+	left: -50%;
+	width: 100%;
+}
+
+.daterange-control{
+	/*z-index: 2000;
+	width: 270px;
+	left: 60px;
+	position: absolute;*/
+	display: inline-flex;
+	padding: 5px 0;
+	/*margin-bottom: 6px;*/
+}
+
+.daterange-control h4{
+	margin: 6px 3px 8px 10px;
+}
+
+.daterange-control .hasDatepicker {
+	width: 140px;
+}
+
+
+.bmd-modalButton {
+  display: block;
+  margin: 15px auto;
+  padding: 5px 15px;
+}
+
+.close-button {
+  overflow: hidden;
+}
+
+.bmd-modalContent {
+  box-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+  
+.bmd-modalContent .close {
+  font-size: 30px;
+  line-height: 30px;
+  padding: 7px 4px 7px 13px;
+  text-shadow: none;
+  opacity: .7;
+  color:#fff;
+}
+
+.bmd-modalContent .close span {
+  display: block;
+}
+
+.bmd-modalContent .close:hover,
+.bmd-modalContent .close:focus {
+  opacity: 1;
+  outline: none;
+}
+
+.bmd-modalContent iframe {
+  display: block;
+  margin: 0 auto;
+}
+
+#popupModal iframe {
+  width: 100%;
+  height: calc(100vh - 94px);
+}
+
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .daterange-control{ display: block; }
+  .modal-body { padding: 0px; }
+  #popupModal iframe {
+    height: calc(100vh - 44px);
+  }
+}

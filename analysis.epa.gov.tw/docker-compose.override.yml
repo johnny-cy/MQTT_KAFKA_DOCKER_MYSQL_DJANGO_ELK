@@ -1,0 +1,48 @@
+---
+version: "3.7"
+
+services:
+  nginx:
+    image: cameo/nginx-dev:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile-dev
+  certbot:
+    image: alpine:latest
+    command:
+      - echo
+      - "hello certbot dummy"
+
+  django:
+    ports:
+      - target: 8000
+        published: 8000
+        protocol: tcp
+        mode: host
+    environment:
+      RELEASE: 0
+      USE_MYSQL: 1
+    command:
+      - python3
+      - manage.py
+      - runserver
+      - "0.0.0.0:8000"
+  api_public:
+    ports:
+      - target: 8001
+        published: 8001
+        protocol: tcp
+        mode: host
+    command:
+      - python3
+      - app.py
+  api_internal:
+    ports:
+      - target: 8002
+        published: 8002
+        protocol: tcp
+        mode: host
+    command:
+      - python3
+      - app.py
+

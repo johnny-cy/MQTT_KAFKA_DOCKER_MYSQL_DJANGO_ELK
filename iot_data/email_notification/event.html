@@ -1,0 +1,44 @@
+
+<h2>Streaming Email Notification</h2>
+
+<p>污染事件編號：#{{ uid }}</p>
+<p>污染等級：
+    {% if event_count >= 15 and duration >= 15 %}
+        <span style="color:#ed5565;">高風險</span>
+    {% elif event_count >= 10 and duration >= 10 %}
+        <span style="color:#f8ac59;">中風險</span>
+    {% else %}
+        <span style="color:black;">無資訊</span>
+    {% endif %}
+</p>
+<p>開始時間：{{ start_time }}</p>
+<p>結束時間：{{ end_time }}</p>
+<p>歷時：{{ duration }} 分鐘</p>
+<p>區域：{{ area }}</p>
+<p>相關 iot 數值：</p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+    style="border-radius:4px;background-color:#ffffff;border:#d4d4d4 1px
+    solid;width: 330px;text-align: center;table-layout: fixed;border-collapse:
+    separate;border-spacing: 0px 8px;">
+    <tbody>
+        <tr><th>設備編號</th><th>設備名稱</th><th>此事件期間 PM2.5 最高數值</th></tr>
+        {% for device in device_list %}
+        <tr>
+            <td>{{ device.device_id }}</td>
+            <td>{{ device.name }}</td>
+            <td>{{ device.pm2_5|map('float')|max|round(1) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br/><br/>
+
+{% if url %}
+<p><a style="border-radius:4px;padding:10px 16px 10px
+    16px;text-decoration:none;font-size:13px;font-weight:700;color:
+    #607D8B;border: 1px solid #607D8B;background:#ffffff;"
+    href="{{ url }}" target="_blank">點我查看事件動畫</a>
+</p>
+{% endif %}

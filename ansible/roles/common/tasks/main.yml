@@ -1,0 +1,30 @@
+---
+- name: Set timezone to Asia/Taipei
+  timezone:
+    name: Asia/Taipei
+
+- name: Install NTP
+  package:
+    name: ntp
+    state: present
+  tags: ntp
+
+- name: Configure NTP
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+  notify:
+    - Restart NTPd
+  tags: ntp
+
+- name: Run NTP
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+  tags: ntp
+
+- name: Install git
+  package:
+    name: git
+    state: present

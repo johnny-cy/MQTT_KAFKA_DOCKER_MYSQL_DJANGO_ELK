@@ -1,0 +1,882 @@
+swagger: '2.0'
+
+info:
+  title: Cameo Analysis - IoT RESTful API spec
+  version: "2.0"
+
+  #host: analysis.epa.gov.tw
+  #basePath: "/api/v2"
+  #schemes: ["https"]
+
+produces:
+  - application/json
+
+paths:
+  /iot/data_fusion:
+    get:
+      summary: Data fusion table
+      operationId: api.iot.data_fusion.get
+      parameters:
+        - name: county
+          description: Records by a specific county
+          in: query
+          required: false
+          type: string
+        - name: start_time
+          description: Time range for getting records, default is set to 3 days ago from end date
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: Time range for getting records, default now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: limit
+          description: limit the return numbers, maximum 10000
+          in: query
+          required: false
+          type: number
+          maximum: 10000
+          default: 10000
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/data_fusion'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 1
+              data:
+                - county: "taichung"
+                  section_index: 1
+                  time: "2018-11-26 17:00:00"
+                  pm25: 14.4193683471048
+                  min_lat: 23.999873
+                  min_lon: 120.471309552233
+                  max_lat: 24.0088871901381
+                  max_lon: 120.481135104466
+              errors: []
+  
+  /epa_station/anomaly:
+    get:
+      summary: EPA Station anomaly detection
+      operationId: api.epa_station.anomaly.get
+      parameters:
+        - name: stations
+          description: station name
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          default: []
+        - name: start_time
+          description: start time, default 1 days before end_time
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: end time, default is now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: level
+          description: anomaly level, default is ["M", "H"]
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          default: ["M", "H"]
+        - name: limit
+          description: limit the return numbers, maximum 10000
+          in: query
+          required: false
+          type: number
+          maximum: 10000
+          default: 10000
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/epa_station_anomaly'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 2
+              data:
+                - level: M
+                  station: 三義
+                  time: "2018-11-28 17:00:00"
+                - station: 三重
+                  level: M
+                  time: "2018-11-28 17:00:00"
+              errors: []
+
+  /iot/events:
+    get:
+      summary: IoT events API
+      operationId: api.iot.event.get
+      parameters:
+        - name: area
+          description: Area of event
+          in: query
+          required: false
+          type: string
+        - name: start_time
+          description: events start from time, default 3 days before end_time
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: events end to time, default now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: min_lat
+          description: minimum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          description: minimum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lat
+          description: maximum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lon
+          description: maximum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: limit
+          description: limit the return numbers, maximum 10000
+          in: query
+          required: false
+          type: number
+          maximum: 10000
+          default: 10000
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/event'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 1
+              data:
+                - area: 仁武工業區
+                  uid: 2083714
+                  event_id: "E6220181126163400"
+                  start_time: "2018-11-26 16:34:00"
+                  end_time: "2018-11-26 16:35:00"
+                  device_count: 1
+                  device_list:
+                    - device_id: "7482486195"
+                      name: "KS-O30139"
+                  duration: 2
+                  event_count: 2
+                  first_device: "7505990504"
+                  first_value: 53
+                  item: "pm2_5"
+                  level: 0
+                  max_value: 48
+                  score: 4
+              errors: []
+
+  /iot/event/earliest:
+    get:
+      summary: The earliest event
+      operationId: api.iot.event.get_earliest
+      parameters:
+        - name: area
+          description: The earliest event in area, if not specified, return the earliest within all areas.
+          in: query
+          required: false
+          type: string
+        - name: min_lat
+          description: minimum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          description: minimum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lat
+          description: maximum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lon
+          description: maximum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/event'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 1
+              data:
+                - area: 仁武工業區
+                  uid: 2083714
+                  event_id: "E6220181126163400"
+                  start_time: "2018-11-26 16:34:00"
+                  end_time: "2018-11-26 16:35:00"
+                  device_count: 1
+                  device_list:
+                    - device_id: "7482486195"
+                      name: "KS-O30139"
+                  duration: 2
+                  event_count: 2
+                  first_device: "7505990504"
+                  first_value: 53
+                  item: "pm2_5"
+                  level: 0
+                  max_value: 48
+                  score: 4
+              errors: []
+
+  /iot/event/count:
+    get:
+      summary: The earliest event
+      operationId: api.iot.event.get_event_counts
+      parameters:
+        - name: area
+          description: The earliest event in area, if not specified, return the earliest within all areas.
+          in: query
+          required: false
+          type: string
+        - name: start_time
+          description: Time range for getting event counts, default is set to 3 days ago from end date
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: Time range for getting event counts, default now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: min_level
+          description: minimum level threshold of event to count
+          in: query
+          required: false
+          type: integer
+        - name: max_level
+          description: maximum level threshold of event to count
+          in: query
+          required: false
+          type: integer
+        - name: min_lat
+          description: minimum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          description: minimum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lat
+          description: maximum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lon
+          description: maximum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/event'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+
+  /iot/circles:
+    get:
+      summary: Get IoT hot zone circles
+      operationId: api.iot.circle.get
+      parameters:
+        - name: area
+          description: Area of event
+          in: query
+          required: false
+          type: string
+        - name: start_time
+          description: events start from time, default 3 days before end_time
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: events end to time, default now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: min_lat
+          description: minimum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          description: minimum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lat
+          description: maximum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lon
+          description: maximum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: limit
+          description: limit the return numbers, maximum 10000
+          in: query
+          required: false
+          type: number
+          maximum: 10000
+          default: 10000
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/circle'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 1
+              data:
+                - area: 台中
+                  circle_index: 3527
+                  lat: 24.1873780150387
+                  lon: 120.620058147881
+                  radius: 0.3
+                  score: 16
+                  time: "2018-11-26 17:00:00"
+              errors: []
+
+  /iot/circles/avg:
+    get:
+      summary: Average function for circles hot zone
+      operationId: api.iot.circle.avg
+      parameters:
+        - name: area
+          description: Area of event
+          in: query
+          required: false
+          type: string
+        - name: start_time
+          description: events start from time, default 3 days before end_time
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: events end to time, default now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: min_lat
+          description: minimum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lat
+          description: maximum latitude value
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          description: minimum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lon
+          description: maximum longitude value
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: score_threshold
+          description: only calculate circles which have score higher than score_threshold. If not given, this value will be given by min_lat/max_lat/min_lon/max_lon.
+          in: query
+          required: false
+          type: number
+        - name: limit
+          description: limit the return numbers, maximum 10000
+          in: query
+          required: false
+          type: number
+          maximum: 10000
+          default: 10000
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/circle_avg'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 1
+              data:
+                - area: 台中
+                  circle_index: 3527
+                  lat: 24.1873780150387
+                  lon: 120.620058147881
+                  radius: 0.3
+                  score avg: 0.013888888888888888
+              errors: []
+
+  /area:
+    get:
+      summary: Get areas' information
+      operationId: api.area.get
+      parameters:
+        - name: area
+          description: specific area name, the API will return the area which has the exactly the same you provided. Leave this field empty to return all areas.
+          in: query
+          required: false
+          type: string
+        - name: min_lat
+          description: minimum latitude value
+          in: query
+          required: false
+          type: number
+          format: double
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          description: minimum longitude value
+          in: query
+          required: false
+          type: number
+          format: double
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lat
+          description: maximum latitude value
+          in: query
+          required: false
+          type: number
+          format: double
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lon
+          description: maximum longitude value
+          in: query
+          required: false
+          type: number
+          format: double
+          minimum: -180.0
+          maximum: 180.0
+        - name: limit
+          description: limit the return numbers, maximum 10000
+          in: query
+          required: false
+          type: integer
+          maximum: 10000
+          default: 10000
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: number of resule
+              data:
+                type: array
+                description: returned result
+                items:
+                  $ref: '#/definitions/area'
+              errors:
+                type: array
+                description: list of error messages
+                items:
+                  type: string
+          examples:
+            application/json:
+              count: 2
+              data:
+                - name: "台中工業區"
+                  area_id: "B55"
+                  min_lat: 24.132
+                  min_lon: 120.573
+                  max_lat: 24.194
+                  max_lon: 120.631
+                - name: "台中港"
+                  area_id: "B56"
+                  min_lat: 24.1748
+                  min_lon: 120.5024
+                  max_lat: 24.2863
+                  max_lon: 120.5432
+              errors: []
+
+
+definitions:
+  area:
+    type: object
+    properties:
+      name:
+        type: string
+        description: name of area
+      area_id:
+        type: string
+        description: id of area
+      min_lat:
+        type: number
+        format: double
+        description: minimum latitude in area's range
+      min_lon:
+        type: number
+        format: double
+        description: minimum longitude in area's range
+      max_lat:
+        type: number
+        format: double
+        description: maximum latitude in area's range
+      max_lon:
+        type: number
+        format: double
+        description: maxmium longitude in area's range
+    required:
+      - name
+      - area_id
+      - min_lat
+      - min_lon
+      - max_lat
+      - max_lon
+
+  data_fusion:
+    type: object
+    properties:
+      county:
+        type: string
+        description: county name
+      section_index:
+        type: integer
+        description: section index
+      time:
+        type: string
+        format: date-time
+        description: time
+      min_lat:
+        type: number
+        format: double
+        description: minimum latitude in area's range
+      min_lon:
+        type: number
+        format: double
+        description: minimum longitude in area's range
+      max_lat:
+        type: number
+        format: double
+        description: maximum latitude in area's range
+      max_lon:
+        type: number
+        format: double
+        description: maxmium longitude in area's range
+    required:
+      - county
+      - section_index
+      - time
+      - min_lat
+      - min_lon
+      - max_lat
+      - max_lon
+
+  epa_station_anomaly:
+    type: object
+    properties:
+      station:
+        type: string
+        description: station name
+      level:
+        type: string
+        description: anomaly level, L = Low, M = Medium, H = Hifh
+      time:
+        type: string
+        format: date-time
+        description: time of event
+    required:
+      - station
+      - level
+      - time
+
+  event:
+    type: object
+    properties:
+      area:
+        type: string
+        description: event area
+      uid:
+        type: integer
+        description: unique id
+      event_id:
+        type: string
+        description: event id
+      start_time:
+        type: string
+        format: date-time
+        description: event start time
+      end_time:
+        type: string
+        format: date-time
+        description: event end time
+      device_count:
+        type: integer
+        description: number of devices involved in this event
+      device_list:
+        type: array
+        items:
+          $ref: '#/definitions/device_id_name'
+      duration:
+        type: integer
+        description: number of minutes this event occurred
+      event_count:
+        type: integer
+        description: number of events this event owned
+      first_device:
+        type: string
+        description: first device name when this event started
+      first_value:
+        type: integer
+        description: first value of first device
+      item:
+        type: string
+        description: detected item, "pm2.5" for now
+      level:
+        type: integer
+        description: event level
+      max_value:
+        type: integer
+        description: maximum value in this event
+      score:
+        type: integer
+        description: score of this event
+
+  device_id_name:
+    type: object
+    properties:
+      device_id:
+        type: string
+        description: device id
+      naem:
+        type: string
+        description: device name
+
+  circle:
+    type: object
+    properties:
+      area:
+        type: string
+        description: circle area
+      circle_index:
+        type: integer
+        description: circle index
+      lat:
+        type: number
+        format: double
+        description: center point latitude
+      lon:
+        type: number
+        format: double
+        description: center point longitude
+      radius:
+        type: number
+        format: double
+        description: circle's radius
+      score:
+        type: integer
+        description: circle's score
+      time:
+        type: string
+        format: date-time
+        description: time
+
+  circle_avg:
+    type: object
+    properties:
+      area:
+        type: string
+        description: circle area
+      circle_index:
+        type: integer
+        description: circle index
+      lat:
+        type: number
+        format: double
+        description: center point latitude
+      lon:
+        type: number
+        format: double
+        description: center point longitude
+      radius:
+        type: number
+        format: double
+        description: circle's radius
+      score avg:
+        type: number
+        format: double
+        description: circle's average score
+

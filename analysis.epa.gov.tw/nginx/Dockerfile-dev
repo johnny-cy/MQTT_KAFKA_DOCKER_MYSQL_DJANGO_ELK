@@ -1,0 +1,12 @@
+FROM nginx:1.15-alpine
+
+RUN wget -O /usr/local/bin/wait-for \
+         https://raw.githubusercontent.com/eficode/wait-for/master/wait-for \
+    && chmod +x /usr/local/bin/wait-for
+
+COPY nginx_http.dev.conf /etc/nginx/conf.d/default.conf
+COPY htpasswd /etc/nginx/htpasswd
+COPY docker-entrypoint.sh .
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]

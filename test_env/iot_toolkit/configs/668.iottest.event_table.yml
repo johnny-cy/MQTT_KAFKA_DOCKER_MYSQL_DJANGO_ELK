@@ -1,0 +1,72 @@
+---
+
+code: "668"
+project: "污染事件測試"
+api_key: "PK79571E3TUPKG1MS5"
+
+
+EventTransmitter:
+  args:
+    etl:
+      - to_numeric:
+          numeric_type: int
+          fields:
+            - score
+            - duration
+            - max_value
+            - first_value
+      - to_str:
+          fields:
+            - level
+      - rename:
+          fields:
+            device_list: deviceList
+            event_id: eventId
+            device_count: deviceCount
+            event_count: eventCount
+            start_time: startTime
+            end_time: endTime
+            max_value: maxValue
+            first_device: firstDeviceId
+            first_value: fisrtValue
+      - select:
+          fields:
+            - pid
+            - level
+            - item
+            - eventId
+            - area
+            - score
+            - deviceCount
+            - deviceList
+            - duration
+            - eventCount
+            - endTime
+            - startTime
+            - maxValue
+            - firstDeviceId
+            - fisrtValue
+            - url
+  input: kafka_event_data_object
+  #output: print_out
+  output: mqtt_data
+
+
+handlers:
+  # SOURCEs
+  kafka_event_data_object:
+    handler: DataObjectKafkaHandler
+    args:
+      model: IoTEvent
+
+  # OUTPUT
+  print_out:
+    handler: PrintHandler
+
+  mqtt_data:
+    handler: MQTTHandler
+    args:
+      host: iottest.epa.gov.tw
+      topics:
+        - /v1/publish/event
+

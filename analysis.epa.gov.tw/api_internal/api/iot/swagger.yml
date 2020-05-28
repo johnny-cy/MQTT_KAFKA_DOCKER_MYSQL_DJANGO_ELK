@@ -1,0 +1,180 @@
+swagger: '2.0'
+
+info:
+  title: IoT API
+  version: "2.0"
+
+produces:
+  - application/json
+
+paths:
+  /iot/devices:
+    get:
+      summary: Get IoT device information
+      operationId: api.iot.device.get
+      parameters:
+        - name: fields
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          default:
+            - device_id
+            - name
+            - desc
+            - type
+            - lat
+            - lon
+            - alt
+            - reference
+            - display
+            - device_type
+            - owner_id
+            - mobile
+            - outdoor
+            - manufacturer_id
+            - mac_id
+            - devstat
+            - sb_id
+            - mb_id
+            - errorcode
+            - area
+            - areatype
+        - name: device_ids
+          description: Query device in `devcie_ids`
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          default: []
+        - name: min_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        # - name: sort
+        # - name: offset
+        # - name: limit
+      responses:
+        200:
+          description: response
+          schema:
+            type: array
+            # TODO
+            items:
+              type: string
+  /iot/rawdata:
+    get:
+      summary: Get IoT rawdata
+      operationId: api.iot.rawdata.get
+      parameters:
+        - name: fields
+          description: Specified fileds to return, ex. pm2_5, voc, ...
+          in: query
+          type: array
+          items:
+            type: string
+          default:
+            - ampere
+            - co
+            - devstat
+            - humidity
+            - humidity_main
+            - no2
+            - noise
+            - o3
+            - pm1
+            - pm2_5
+            - pm10
+            - temperature
+            - temperature_main
+            - voc
+            - volt
+        - name: start_time
+          description: Start time, default is 3 hours before end_time
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: End time, default is now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: min_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: resample
+          description: Resampling rate, 1-minute by default
+          in: query
+          required: false
+          default: 1m
+          type: string
+        - name: return_format
+          description: json or csv
+          in: query
+          required: false
+          default: json
+          type: string
+      responses:
+        200:
+          description: response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/rawdata"
+
+definitions:
+  rawdata:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: Unique identifier
+        example: "123"
+        readOnly: true

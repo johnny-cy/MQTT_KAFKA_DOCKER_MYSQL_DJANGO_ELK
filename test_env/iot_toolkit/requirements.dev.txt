@@ -1,0 +1,6 @@
+-e ../../epa-package_py/
+confluent-kafka<=0.11.4
+python-dateutil
+PyYAML
+requests
+paho-mqtt

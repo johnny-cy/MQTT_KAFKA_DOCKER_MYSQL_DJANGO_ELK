@@ -1,0 +1,101 @@
+---
+version: "3.7"
+
+services:
+  elasticsearch:
+    image: cameo/elasticsearch:latest
+    build:
+      context: ./elasticsearch
+    volumes:
+      - type: volume
+        source: epa-elasticsearch
+        target: /usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xmx4096m -Xms4096m"
+    networks:
+      - epa-elk
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 8192M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+  logstash:
+    image: cameo/logstash:latest
+    build:
+      context: ./logstash
+    volumes:
+      - type: volume
+        source: epa-logstash
+        target: /usr/share/logstash/data
+    environment:
+      LS_JAVA_OPTS: "-Xmx1024m -Xms1024m"
+      API_SERVER: "analysis.epa.gov.tw"
+    networks:
+      - epa-elk
+      - epa-kafka
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1g"
+  kibana:
+    image: cameo/kibana:latest
+    build:
+      context: ./kibana
+    volumes:
+      - type: volume
+        source: epa-kibana
+        target: /usr/share/kibana/data
+    networks:
+      - epa-elk
+  logspout1:
+    image: cameo/logspout:latest
+    build:
+      context: ./logspout
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      ROUTE_URIS: logstash+tcp://logstash:5000
+      LOGSTASH_TAGS: logspout,cameo
+    networks:
+      - epa-elk
+  elastalert:
+    image: cameo/elastalert:latest
+    build:
+      context: ./elastalert
+    networks:
+      - epa-elk
+
+
+networks:
+  epa-elk:
+    name: epa-elk
+    driver: overlay
+    attachable: true
+  epa-kafka:
+    name: epa-kafka
+    external: true
+
+
+volumes:
+  epa-elasticsearch:
+    driver: local
+  epa-logstash:
+    driver: local
+  epa-kibana:
+    driver: local
+
+
+x-cameo:
+  deploy:
+    stack_name: epa-elk
+    enable: true
+    priority: 20
+  build:
+    enable: true

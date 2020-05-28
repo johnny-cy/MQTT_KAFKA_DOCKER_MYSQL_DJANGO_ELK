@@ -1,0 +1,11 @@
+{% extends 'admin/base_site.html' %}
+
+{% load static %}
+
+{% block branding %}
+    <h1 id="site-name">
+    	<a href="{% url 'admin:index' %}">
+    		<img src="{% static 'images/demo_icon.png' %}" width="36" height="36" alt="logo"/>
+    	</a>
+    </h1>
+{% endblock %}

@@ -1,0 +1,42 @@
+---
+version: "3.7"
+
+services:
+  mysql:
+    image: cameo/mariadb:latest
+    build:
+      context: ./mariadb
+    networks:
+      - epa-data_warehouse
+    volumes:
+      - type: volume
+        source: epa-mysql
+        target: /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "1qaz@WSX3edc"
+      MYSQL_ROOT_HOST: localhost
+    deploy:
+      resources:
+        limits:
+          memory: 8200M
+
+
+networks:
+  epa-data_warehouse:
+    name: epa-data_warehouse
+    driver: overlay
+    attachable: true
+
+
+volumes:
+  epa-mysql:
+    driver: local
+
+
+x-cameo:
+  deploy:
+    stack_name: epa-data_warehouse
+    enable: true
+    priority: 30
+  build:
+    enable: true

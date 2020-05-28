@@ -1,0 +1,99 @@
+---
+version: "3.7"
+
+services:
+  nginx:
+    image: cameo/nginx:latest
+    build:
+      context: ./nginx
+    networks:
+      - epa-nginx
+        #      - epa-elk
+      - epa-data_warehouse
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: epa-django_static
+        target: /static
+        read_only: true
+      - type: volume
+        source: epa-certbot_cert
+        target: /etc/letsencrypt
+        read_only: true
+      - type: volume
+        source: epa-certbot_data
+        target: /var/www/letsencrypt
+        read_only: true
+
+  django:
+    image: cameo/django:latest
+    build:
+      context: ./website
+    networks:
+      - epa-nginx
+      - epa-data_warehouse
+    volumes:
+      - type: volume
+        source: epa-django_static
+        target: /workspace/static
+        read_only: false
+    environment:
+      RELEASE: 1
+      USE_MYSQL: 1
+
+  api_public:
+    image: cameo/api_public:latest
+    build:
+      context: ./api_public
+    networks:
+      - epa-nginx
+      - epa-data_warehouse
+  api_internal:
+    image: cameo/api_internal:latest
+    build:
+      context: ./api_internal
+    networks:
+      - epa-nginx
+      - epa-data_warehouse
+
+
+networks:
+  epa-nginx:
+    name: epa-nginx
+    driver: overlay
+    attachable: true
+  epa-data_warehouse:
+    name: epa-data_warehouse
+    external: true
+    #  epa-elk:
+    #    name: epa-elk
+    #    external: true
+
+
+volumes:
+  epa-django_static:
+    name: epa-django_static
+    driver: local
+  epa-certbot_cert:
+    name: epa-certbot_cert
+    driver: local
+  epa-certbot_data:
+    name: epa-certbot_data
+    driver: local
+
+
+x-cameo:
+  deploy:
+    stack_name: epa-analysis
+    enable: true
+    priority: 110
+  build:
+    enable: true

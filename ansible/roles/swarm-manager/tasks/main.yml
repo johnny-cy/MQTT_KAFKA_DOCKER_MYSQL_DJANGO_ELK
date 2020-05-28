@@ -1,0 +1,42 @@
+---
+- name: Install required packages for Docker-CE
+  package:
+    name: yum-utils
+    state: present
+
+- name: Add Docker-CE repository
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: 0644
+
+# - name: Enable Docker-CE edge
+# shell: yum-config-manager --enable docker-ce-edge
+
+- name: Ensure docker-ce is installed
+  package:
+    name: docker-ce-18.06*
+    state: latest
+  notify: Restart docker
+
+- name: Enable the Docker daemon as a service and start it
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Install docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+
+- name: Check if "Swarm Mode" is enabled
+  shell: docker info
+  changed_when: False
+  register: docker_info
+
+- name: Init "Swarm Mode" on the manager
+  shell: docker swarm init
+        --advertise-addr "{{ ansible_default_ipv4.address }}"
+  when: "docker_info.stdout.find('Swarm: active') == -1"

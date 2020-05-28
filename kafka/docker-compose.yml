@@ -1,0 +1,57 @@
+---
+version: "3.7"
+
+services:
+  zookeeper:
+    image: cameo/zookeeper:latest
+    build:
+      context: ./zookeeper
+    networks:
+      - epa-kafka
+    volumes:
+      - type: volume
+        source: epa-zookeeper_data
+        target: /data
+      - type: volume
+        source: epa-zookeeper_datalog
+        target: /datalog
+  kafka:
+    image: cameo/kafka:latest
+    build:
+      context: ./kafka
+    networks:
+      - epa-kafka
+    volumes:
+      - type: volume
+        source: epa-kafka
+        target: /kafka
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_LOG_DIRS: /kafka/kafka-logs
+
+
+networks:
+  epa-kafka:
+    name: epa-kafka
+    driver: overlay
+    attachable: true
+
+
+volumes:
+  epa-kafka:
+    driver: local
+  epa-zookeeper_data:
+    driver: local
+  epa-zookeeper_datalog:
+    driver: local
+
+
+x-cameo:
+  deploy:
+    stack_name: epa-kafka
+    enable: true
+    priority: 10
+  build:
+    enable: true

@@ -1,0 +1,8 @@
+[vagrant]
+localhost ansible_connection=local epa2018_deploy=dev
+
+[swarm-manager:children]
+vagrant
+
+[epa2018:children]
+vagrant

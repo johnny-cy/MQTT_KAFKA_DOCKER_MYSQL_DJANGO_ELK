@@ -1,0 +1,44 @@
+---
+version: "3.7"
+
+services:
+  iot_fetcher_553:
+    image: cameo/iot_toolkit:latest
+    networks:
+      - epa-kafka
+      - epa-data_warehouse
+    command:
+      - iot_fetcher.py
+      - configs/553.iot.yml
+      - "-s"
+      - "2018-08-01"
+
+  iot_fetcher_562:
+    image: cameo/iot_toolkit:latest
+    networks:
+      - epa-kafka
+      - epa-data_warehouse
+    command:
+      - iot_fetcher.py
+      - configs/562.lass.yml
+      - "-s"
+      - "2018-08-01"
+
+  iot_fetcher_566:
+    image: cameo/iot_toolkit:latest
+    networks:
+      - epa-kafka
+      - epa-data_warehouse
+    command:
+      - iot_fetcher.py
+      - configs/566.epa_station.textar.yml
+      - "-s"
+      - "2018-08-01"
+
+networks:
+  epa-kafka:
+    name: epa-kafka
+    external: true
+  epa-data_warehouse:
+    name: epa-data_warehouse
+    external: true

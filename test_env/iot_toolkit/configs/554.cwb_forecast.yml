@@ -1,0 +1,16 @@
+---
+
+code: "554"
+project: "鄉鎮天氣預報"
+api_key: "PKSPM971F9WCC4SHCB"
+fetch_devices: []   # empty array, fetcher will get all devices' rawdata
+fetch_sensors: []   # empty array, fetcher will get all sensor types
+time_span_hours: 9900
+
+handlers:
+  kafka:
+    handler_id: kafka
+    args:
+      topic: rawdata.554.cwb_forecast
+      bootstrap.servers: "kafka:9092"
+      queue.buffering.max.ms: 3000

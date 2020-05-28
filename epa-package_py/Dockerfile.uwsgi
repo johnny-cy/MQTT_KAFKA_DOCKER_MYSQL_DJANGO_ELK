@@ -1,0 +1,9 @@
+FROM cameo/epa-python-base:latest
+
+RUN apk add --no-cache --virtual .build-deps \
+        build-base \
+        linux-headers \
+    && pip3 --no-cache-dir install \
+        uwsgi==2.0.17.1 \
+    && apk del .build-deps
+

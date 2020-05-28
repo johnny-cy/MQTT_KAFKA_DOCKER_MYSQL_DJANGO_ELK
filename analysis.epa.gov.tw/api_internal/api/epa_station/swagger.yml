@@ -1,0 +1,168 @@
+swagger: '2.0'
+
+info:
+  title: EPA Station API
+  version: "2.0"
+
+produces:
+  - application/json
+
+paths:
+  /epa_station/devices:
+    get:
+      summary: EPA station information
+      operationId: api.epa_station.device.get
+      parameters:
+        - name: fields
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          default:
+            - device_id
+            - name
+            - desc
+            - type
+            - lat
+            - lon
+            - alt
+            - reference
+            - display
+            - device_type
+            - owner_id
+            - mobile
+            - outdoor
+            - manufacturer_id
+            - sub_device_type
+        - name: device_ids
+          description: Query device in `devcie_ids`
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          default: []
+        - name: min_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        # - name: sort
+        # - name: offset
+        # - name: limit
+      responses:
+        200:
+          description: response
+          schema:
+            type: array
+            # TODO
+            items:
+              type: string
+  /epa_station/rawdata:
+    get:
+      summary: EPA station rawdata
+      operationId: api.epa_station.rawdata.get
+      parameters:
+        - name: fields
+          description: Specified fileds to return, ex. pm2_5, so2, ...
+          in: query
+          type: array
+          items:
+            type: string
+          default:
+            - amb_temp
+            - ch4
+            - co
+            - nmhc
+            - "no"
+            - no2
+            - nox
+            - "o3"
+            - pm10
+            - pm10_test
+            - pm2_5
+            - pm2_5_ori
+            - rainfall
+            - rh
+            - shelt_temp
+            - so2
+            - thc
+            - wd_hr
+            - wind_direct
+            - wind_speed
+            - ws_hr
+        - name: start_time
+          description: Start time, default is 3 days before end_time
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: end_time
+          description: End time, default is now
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: min_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: max_lat
+          in: query
+          required: false
+          type: number
+          minimum: -90.0
+          maximum: 90.0
+        - name: min_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+        - name: max_lon
+          in: query
+          required: false
+          type: number
+          minimum: -180.0
+          maximum: 180.0
+      responses:
+        200:
+          description: response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/rawdata"
+
+definitions:
+  rawdata:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: Unique identifier
+        example: "123"
+        readOnly: true

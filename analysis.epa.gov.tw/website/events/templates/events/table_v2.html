@@ -1,0 +1,56 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}重大事件排行榜{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/plugins/dataTables/datatables.min.css' %}" />
+<link href="{% static 'css/event-table-widget.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'events/css/event_table.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
+<script src="{% static 'js/api-urls.js' %}"></script>
+<script src="{% static 'js/area-meta-map-by-county.js' %}"></script>
+<script src="{% static 'js/event-table-widget-v2.js' %}"></script>
+<script src="{% static 'events/js/event_table.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="ibox float-e-margins">
+  <div class="ibox-title">
+    <h3>
+      <span>重大事件排行榜V2</span>
+      <i class="info fa fa-info-circle" title="(1) 下表預設依照污染分數排序 &#10;(2) 點選『播放』可瀏覽當時空污模擬動畫&#10;(3) 污染事件與地圖更新時間，每日上午 8:00&#10;(4) 風速資料來源為『中央氣象局』&#10;(5) 風速資料更新時間，每日下午 5:00，可取得昨日的資料" data-toggle="tooltip" data-placement="right"></i>
+    </h3>
+  </div>
+  <div class="ibox-content">
+    <div class="row">
+      <div class="col-sm-12">
+        <div id="filterDate" class="form-group">
+          只顯示此時間區段
+          <div class="input-daterange input-group">
+            <input type="text" class="input-sm form-control" name="start" value="" id="fromDate">
+            <span class="input-group-addon">to</span>
+            <input type="text" class="input-sm form-control" name="end" value="" id="toDate">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div id="filterDaterange" class="form-group"></div>
+      </div>
+      <div class="col-sm-6">
+        <div id="riskChecks" class="form-group"></div>
+      </div>
+      <div class="col-sm-12">
+        <div id="filterArea" class="form-group"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

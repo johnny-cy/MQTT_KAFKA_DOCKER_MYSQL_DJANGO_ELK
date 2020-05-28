@@ -1,0 +1,199 @@
+---
+
+code: "562"
+project: "LASS"
+api_key: "PK7XT4B542TBGECY4X"
+
+
+# MQTT
+
+MQTTReceiver:
+  args: {}
+  input: mqtt_data
+  output: kafka_mqtt_data
+
+
+MQTTETLer:
+  args: &etl_pipelines
+    etl:
+      - take_first:
+          field: value
+      - to_numeric:
+          fields:
+            - value
+      - replace_value:
+          field: value
+          old_values:
+            - NA
+            - ""
+          new_value: null
+      - rename:
+          fields:
+            deviceId: device_id
+      - rename_from_field_value:
+          field: value
+          from_field: id
+      - append_device_name_lat_lon:
+          device_cls_name: LassDevice
+      - select:
+          fields:
+            - time
+            - device_id
+            - name
+            - lat
+            - lon
+            - humidity
+            - pm2_5
+            - pm10
+            - temperature
+  input: kafka_mqtt_data
+  output: kafka_etl_data
+
+
+# RESTful
+
+RawdataUpdater:
+  args:
+    time_span_days: 5
+    device_class: LassDevice
+    data_class: LassRawData
+    data_count_class: LassRawDataCount
+  input: http_rawdata
+  output: kafka_rest_data
+
+
+RESTETLer:
+  args:
+    << : *etl_pipelines
+  input: kafka_rest_data
+  output: kafka_etl_data
+
+
+DeviceInformer:
+  args:
+    etl:
+      - update_from_dict_list:
+          field: attributes
+          drop: true
+      - rename:
+          fields:
+            id: device_id
+            deviceType: device_type
+            ownerId: owner_id
+            manufacturerId: manufacturer_id
+      - to_bool:
+          fields:
+            - mobile
+      - select:
+          fields:
+            - device_id
+            - name
+            - desc
+            - type
+            - lat
+            - lon
+            - alt
+            - reference
+            - display
+            - device_type
+            - owner_id
+            - mobile
+            - outdoor
+            - manufacturer_id
+            - sensors
+  input: http_device
+  output: db_device
+
+
+CountUpdater:
+  input: http_count
+  output: db_count
+
+
+# Save to DB
+
+DBShelver:
+  args:
+    postpone_write: True
+  input: kafka_etl_data
+  output: db_data
+
+
+ESShelver:
+  args:
+    postpone_write: True
+    postpone_gather_keys:
+      - time
+      - device_id
+    etl:
+      - datetime_to_isoformat:
+          field: time
+          parsing_format: "%Y-%m-%d %H:%M:%S.%f"
+          zoneinfo: Asia/Taipei
+  input: kafka_etl_data
+  output: es_data
+
+
+DataObject:
+  input: kafka_etl_data
+  output: kafka_data_object
+
+
+
+handlers:
+  # SOURCEs
+  mqtt_data:
+    handler: MQTTHandler
+    args:
+      topics:
+        - /v1/project/562/device/+/sensor/+/rawdata
+  http_rawdata:
+    handler: HTTPHandler
+  http_count:
+    handler: HTTPHandler
+  http_device:
+    handler: DeviceHTTPHandler
+
+  # KAFKA QUEUEs
+  kafka_mqtt_data:
+    handler: KafkaHandler
+    args:
+      topics:
+        - rawdata.lass.562.lass.mqtt
+  kafka_rest_data:
+    handler: KafkaHandler
+    args:
+      topics:
+        - rawdata.lass.562.lass.rest
+      config: {}
+  kafka_etl_data:
+    handler: KafkaHandler
+    args:
+      topics:
+        - rawdata.lass.562.lass.etl
+  kafka_data_object:
+    handler: DataObjectKafkaHandler
+    args:
+      model: LassRawData
+
+  # STORAGEs
+  es_data:
+    handler: ESHandler
+    args:
+      index: rawdata.lass.562.lass
+      id_fields:
+        - time
+        - device_id
+  db_data:
+    handler: SqlAlchemyHandler
+    args:
+      model: LassRawData
+  db_count:
+    handler: SqlAlchemyHandler
+    args:
+      model: LassRawDataCount
+  db_device:
+    handler: SqlAlchemyHandler
+    args:
+      model: LassDevice
+

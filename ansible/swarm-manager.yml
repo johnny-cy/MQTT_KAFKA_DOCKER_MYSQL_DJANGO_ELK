@@ -1,0 +1,7 @@
+---
+- name: Docker Swarm Manager
+  hosts: swarm-manager
+  remote_user: root
+  roles:
+    - common
+    - swarm-manager

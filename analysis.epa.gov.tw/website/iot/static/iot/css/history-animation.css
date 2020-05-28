@@ -1,0 +1,429 @@
+*:focus {
+	outline: none;
+}
+
+html, body, #show-layer{
+	height: 100%;
+}
+
+#loading-layer .loader-tip{
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    top: calc(50vh + 40px);
+    font-size: 15px;
+}
+
+/* ==========  map  ========== */
+
+#map {
+  width:100%;
+  height: calc(100% - 50px);
+}
+
+/* ==========  time-control  ========== */
+
+#controller-container {
+    position: absolute;
+    width: 100%;
+  	bottom: 0;
+  	/*background-color: rgba(0,0,0,0.1);*/
+    background-color: #b4b4b4;
+  	border-top: 1px #C5C5C5 solid;
+  	z-index: 9000;
+  	padding: 0px 10px 4px 10px;
+}
+
+.control-button{
+	margin-top: 10px;
+	margin-bottom: 3px;
+	color: #FFFFFF;
+	height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+
+#controller-container .deny{
+	opacity: 0.3;
+    cursor: not-allowed;
+}
+
+#controller-container .control-wrap{
+    float: left;
+}
+
+#controller-container .slider-wrap{
+    float: left;
+    margin-left: 4px;
+    width: calc(100% - 153px);
+}
+
+#slider {
+	margin:16px 10px 10px 10px;
+	width: 100%;
+}
+
+.noUi-tooltip{
+	font-size: 1.1em;
+	/*color: #4988cc;*/
+	/*margin-left: 55px;*/
+	width: 140px;
+	bottom: 116% !important;
+	left: -55% !important;
+	padding: 4px;
+}
+
+#color-samples{
+	position: absolute;
+    z-index: 9000;
+    top: 15px;
+    right: 15px;
+    padding: 8px;
+    width: 450px;
+    height: 50px;
+    background: rgba(255,255,255,0.6);
+}
+
+#color-samples .color-list{
+	float: left;
+	display: block;
+	height: 100%;
+	margin: 0 1%;
+}
+
+#color-samples .color-list{
+	width: 96%;
+}
+
+#color-samples table{
+	width: 100%;
+    height: 100%;
+    table-layout: fixed;
+    border-spacing: 2px 0px;
+    border-collapse: separate;
+}
+
+#color-samples table tr.color-row{
+	height: 70%;
+}
+
+#color-samples table tr.text{
+	text-align: center;
+	font-size: 12px;
+	vertical-align: top;
+}
+
+#color-samples table tr.linear-text{
+	text-align: center;
+    font-size: 12px;
+    vertical-align: top;
+}
+
+#color-samples table tr.linear-text td:nth-child(n+2) span {
+    margin-left: -10px;
+}
+
+@media (max-width: 768px) {
+    #color-samples {
+        width: 320px;
+        top: 46px;
+        right: 10px;
+        display: none;
+    }
+}
+
+/*.leaflet-control-scale{
+	margin-bottom: 30px !important;
+}*/
+
+.flot-chart{
+    width: 320px;
+    height: 180px;
+}
+
+.flot-chart-content{
+    min-height: 65px;
+}
+
+#flotTip{
+	z-index: 10001 !important;
+}
+
+#chart-compares{
+    width: 360px;
+    height: calc(100% - 50px);
+    padding: 10px 15px;
+    background: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: none;
+    overflow: auto;
+}
+
+#chart-compares .chart-compare-item{
+    margin-bottom: 15px;
+    padding: 4px;
+}
+
+#chart-compares .chart-compare-item.focus{
+    box-shadow: 0px 0px 10px 3px #ccc;
+    border-radius: 5px;
+}
+
+#chart-compares .chart-compare-item h5{
+    margin-bottom: 0 !important;
+}
+
+#chart-compares .chart-compare-remove{
+    float: right;
+    line-height: 10px;
+}
+
+.flot-chart-add{
+    float: right;
+    line-height: 13px;
+}
+
+.chart-compare-maplabel{
+    width: 100%;
+    height: 100%;
+    border: 4px solid rgba(28, 132, 198, 0.6);
+    border-radius: 50%;
+}
+
+.chart-compare-maplabel.focus{
+    border-color: rgba(28, 132, 198, 1);
+}
+
+.chart-compare-maplabel span{
+    margin-top: -25px;
+    display: block;
+    font-size: 15px;
+}
+
+.chart-compare-maplabel.focus span{
+    margin-top: -26px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+/* ==========  wind-direction  ========== */
+.wind-mobile-wrap, .color-mobile-wrap{
+    z-index: 950;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 2px solid rgba(0,0,0,.2);
+    background-clip: padding-box;
+    text-align: center;
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    line-height: 30px;
+    background-color: #fff;
+    color: #000;
+    font-size: 20px;
+    display: none;
+}
+
+.wind-mobile-wrap.onFocus, .color-mobile-wrap.onFocus{
+    background-color: #ccc;
+}
+
+.wind-mobile-wrap{
+    top: 90px;
+    left: 10px;
+}
+
+.color-mobile-wrap{
+    top: 10px;
+    right: 10px;
+}
+
+.wind-wrap{
+	position: absolute;
+    top: 90px;
+    left: 20px;
+    padding: 10px 10px 0 12px;
+    background: rgba(255,255,255,0.55);
+    color: rgba(0,0,0,.8);
+    z-index: 9999;
+    font-size: 1.1em;
+    font-weight: 700;
+    border: 2px solid #d9d9d9;
+	border-radius: 5px;
+	box-shadow: 0px 0px 15px 2px rgba(216,216,216,0.7);
+}
+.wind-wrap p{
+	margin-bottom: 10px;
+	margin-top: 0px;
+}
+
+@media (max-width: 768px) {
+    .wind-wrap{
+        display: none;        
+        left: 10px;
+        top: 125px;
+    }
+    .wind-mobile-wrap, .color-mobile-wrap{
+        display: block;
+    }
+}
+
+#wind-direction{
+    top: 0px;
+    left: 0px;
+    background: transparent;
+}
+#wind-direction p { position: relative; }
+#windDirArrow{
+	display: block;
+    width: 1em;
+    position: absolute;
+    right: 10px;
+	top: 0px;
+    text-align: center;
+}
+#windBarb{
+	position: absolute;
+	left: 90px;
+	/*top: 62px;*/
+	top: 94px;
+}
+
+/* ==========  wind-direction  ========== */
+/* Extends from bootstrap */
+.tooltip {
+    z-index: 10700;
+}
+.tooltip-inner {
+    max-width: 360px;
+    white-space: pre-line;
+    text-align: left;
+    line-height: 20px;
+}
+
+/* ==========  map surround object controller  ========== */
+.soc-wrap{
+    z-index: 900;
+    position: absolute;
+    display: none;
+}
+
+.soc-arrow{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.soc-body{
+    font-size: 14px;
+    padding: 24px;
+}
+
+.wind-object-wrap{
+    padding: 8px 10px 8px 10px;
+    background: rgba(255,255,255,0.9);
+    color: rgba(0,0,0,.8);
+    border: 2px solid #d9d9d9;
+    border-radius: 6px;
+    box-shadow: 0px 0px 10px 1px rgba(216,216,216,0.8);
+}
+
+.wind-object-wrap p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.wind-object-header{
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.wind-object-arrow{
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+    font-weight: 800;
+}
+
+.wind-object-mobile-wrap{
+    border: solid 4px #a9a9a9;
+    background: #2b80bc;
+    border-radius: 10px;
+    padding: 2px 5px;
+    position: relative;
+    color: #f2f2f2;
+    font-size: 1.1em;
+    /*would valid in 768px*/
+    display: none;
+    cursor: pointer;
+}
+
+.wind-object-mobile-wrap.toRight{
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.wind-object-mobile-wrap.onFocus{
+    background: #0b609c;
+}
+
+span.wind-object-mobile-text{
+    display: table-cell;
+}
+
+span.wind-object-mobile-space{
+    width: 24px;
+    height: 24px;
+    display: table-cell;
+}
+
+span.wind-object-mobile-arrow{
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 1em;
+    font-size: 1.2em;
+}
+
+.wind-icon-wrap{
+    border: 0;
+    background: #a9a9a9;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.wind-icon-inner{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #2b80bc;
+    color: #f2f2f2;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.wind-object-inpopup{
+    padding:0;
+    border: initial;
+    border-radius: initial;
+    box-shadow: initial;
+}
+
+@media (max-width: 768px) {
+    .wind-object-mobile-wrap{
+        display: table;
+    }
+    .soc-wrap .wind-object-wrap{
+        display: none;
+    }
+}

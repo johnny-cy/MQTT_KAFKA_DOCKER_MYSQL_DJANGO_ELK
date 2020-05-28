@@ -1,0 +1,49 @@
+
+.loading-layer{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+	z-index: 10000;
+}
+
+.loading-layer .loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -30px; /* Negative half of height. */
+  margin-left: -30px; 
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: widgetspin 2s linear infinite;
+}
+
+.loading-layer p.loader-text{
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  text-align: center;
+  top: 56vh;
+}
+
+@-webkit-keyframes widgetspin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes widgetspin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.table-responsive{
+	position: relative;
+}
+
+.table-responsive.loading .dataTables_wrapper{
+	opacity: 0.35;
+}
+

@@ -1,0 +1,111 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}排放潛勢{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/plugins/leaflet/leaflet.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/plugins/mapbox/mapbox.standalone.css' %}" rel="stylesheet" />
+<link href="{% static 'css/plugins/nouislider/nouislider.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/plugins/switchery/switchery.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/plugins/leaflet/leaflet.extra-markers.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/plugins/jquery-ui/jquery-ui-timepicker-addon.min.css' %}" rel="stylesheet" />
+<!-- Custom Styles -->
+<link href="{% static 'css/loading-widget.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'circle/css/circle-average.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{% static 'js/api-urls.js' %}"></script>
+<script src="{% static 'js/plugins/leaflet/leaflet.min.js' %}"></script>
+<script src="{% static 'js/plugins/mapbox/mapbox.standalone.js' %}"></script>
+<script src="{% static 'js/plugins/leaflet/leaflet.extra-markers.min.js' %}"></script>
+<script src="{% static 'js/plugins/nouislider/nouislider.min.js' %}"> </script>
+<script src="{% static 'js/plugins/rainbowvis/rainbowvis.js' %}"></script>
+<script src="{% static 'js/plugins/switchery/switchery.min.js' %}"></script>
+<script src="{% static 'js/plugins/jquery-ui/jquery-ui-timepicker-addon.min.js' %}"></script>
+<script src="{% url 'configs_area_map_js' %}"></script>
+<!-- Custom JS -->
+<script src="{% static 'circle/js/circle-average.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- loading layer -->
+<div id='loading-layer'>
+    <div class="loader"></div>
+    <p class="loader-text">獲取資料中...請稍等 10 ~ 30 秒</p>
+</div>
+<!-- body layer -->
+<div id='show-layer'>
+    <h2>排放潛勢：<span id="headerAreaText"></span></h2>
+    <div class="overview-tip-wrap">
+        <div class="col-xs-1">
+            <div class="max-score">100 %</div>
+            <div class="min-score">0 %</div>
+            <canvas id="color-range" width="30" height="60"></canvas>
+        </div>
+        <div class="col-xs-6">
+            <p><span class="overview-red">紅色：高污染潛勢</span>（此時段相較於其他區域，出現多次異常超標事件）</p>
+            <p><span class="overview-yellow">黃色：中污染潛勢</span>（此時段相較於其他區域，有時會出現異常超標事件）</p>
+            <p><span class="overview-green">綠色：低污染潛勢</span>（此區域會出現偶發性的污染事件）</p>
+            <br/>
+        </div>
+        <div class="col-xs-5">
+            <button id="fullscreenBtn" class="btn btn-lg btn-default"><i class="glyphicon glyphicon-fullscreen"></i> 全螢幕檢視</button>
+            <a class="btn btn-lg btn-default" href="https://docs.google.com/document/d/14GKXd95k3igFcg3adlbWiWcJ_pfPDRRXEfeIP81w-fQ/edit#heading=h.gsx7jv3lwsbz" target="_blank"><i class="glyphicon glyphicon-file"></i> 教學文件</a>
+            <p id="event-alert" class="text-danger" style="display: none;">此圈選時段無<span></span>污染事件，可嘗試切換污染等級或拉大時間範圍</p>
+        </div>
+    </div>
+    <!-- Control Bar -->
+    <div class="row tools-control">
+        <div class="col-md-12">
+            <div class="daterange-text-wrap">FROM
+                <input type="text" class="input-sm form-control" name="start" value="" id="fromDatePicker">
+            </div>
+            <div class="daterange-text-wrap">TO
+                <input type="text" class="input-sm form-control" name="end" value="" id="toDatePicker">
+            </div>
+            <div id="filterDaterange"></div>
+            <div class="switcher-wrap">
+                <span> IoT 部署點位  </span>
+                <input id="iotShowSwitch" type="checkbox" checked="checked" />
+            </div>
+            <div class="switcher-wrap">
+                <span> 事件數量標記  </span>
+                <input id="markerShowSwitch" type="checkbox" checked="checked" />
+            </div>
+            <div class="switcher-wrap">
+                <span> 污染等級: </span>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default active">
+                        <input type="radio" name="radio" value="高" id="option1" autocomplete="off" checked> 高
+                    </label>
+                    <label class="btn btn-sm btn-default">
+                        <input type="radio" name="radio" value="中" id="option2" autocomplete="off"> 中
+                    </label>
+                    <label class="btn btn-sm btn-default">
+                        <input type="radio" name="radio" value="低" id="option3" autocomplete="off"> 低
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id='controller-container'>
+                <span class="from-date"></span>
+                <div class="slider-wrap">
+                    <button id='slider'></button>
+                </div>
+                <span class="to-date"></span>
+            </div>
+        </div>
+    </div>
+    <!-- Map -->
+    <div id='map'>
+        <p class="event-number-tip"># 表示：此時間區段，此顆 IoT PM2.5 數值 &gt; 54 的 # 事件個數</p>
+    </div>
+</div>
+{% endblock %}

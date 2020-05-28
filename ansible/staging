@@ -1,0 +1,8 @@
+[linode]
+139.162.117.244
+
+[swarm-manager:children]
+linode
+
+[epa2018:children]
+linode

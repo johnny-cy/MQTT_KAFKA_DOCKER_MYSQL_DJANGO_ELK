@@ -1,0 +1,19 @@
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v1.3.0
+    hooks:
+      - id: no-commit-to-branch
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=2048']
+      - id: requirements-txt-fixer
+      - id: fix-encoding-pragma
+      - id: debug-statements
+      - id: autopep8-wrapper
+      - id: flake8
+        args: ['--config=./.flake8']

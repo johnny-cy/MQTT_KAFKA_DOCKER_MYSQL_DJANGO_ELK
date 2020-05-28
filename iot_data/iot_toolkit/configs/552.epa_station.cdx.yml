@@ -1,0 +1,16 @@
+---
+
+code: "552"
+project: "國家級76測站_CDX"
+api_key: "PK4TYBXUKGETRPYWT1"
+fetch_devices: []   # empty array, fetcher will get all devices' rawdata
+fetch_sensors: []   # empty array, fetcher will get all sensor types
+time_span_hours: 9900
+
+handlers:
+  kafka:
+    handler_id: kafka
+    args:
+      topic: rawdata.552.epa_station.cdx
+      bootstrap.servers: "kafka:9092"
+      queue.buffering.max.ms: 3000

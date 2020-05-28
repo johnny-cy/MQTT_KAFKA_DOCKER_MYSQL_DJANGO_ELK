@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}API數據監控{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/embed-widget.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block content %}
+<h2>API數據監控</h2>
+<div class="embed-wrap">
+	<iframe src="https://analysis.epa.gov.tw/_/elk/app/kibana#/dashboard/ebe92a50-dce8-11e8-bcdc-6fc25be6f49a?embed=true&_g=(refreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-12h%2Cmode%3Aquick%2Cto%3Anow))"></iframe>
+</div>
+{% endblock %}
